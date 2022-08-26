@@ -9,6 +9,7 @@ import EditProfilePopup from './EditProfilePopup';
 import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import PopupWithConfirm from './PopupWithConfirm';
+import Login from './Login';
 
 export default function App() {
   // cтейты модалок
@@ -139,7 +140,7 @@ export default function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main
+        {/* <Main
           cards={cards}
           onCardLike={handleCardLike}
           onConfirmOpen={setIsConfirmPopupOpen}
@@ -148,7 +149,8 @@ export default function App() {
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
           onConfirm={setIdCardToDelete}
-        />
+        /> */}
+        <Login/>
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
