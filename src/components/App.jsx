@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import api from '../utils/Api';
-import CurrentUserContext from '../contexts/CurrentUserContext';
-import Header from './Header';
-import Main from './Main';
-import Footer from './Footer';
-import ImagePopup from './ImagePopup';
-import EditProfilePopup from './EditProfilePopup';
-import AddPlacePopup from './AddPlacePopup';
-import EditAvatarPopup from './EditAvatarPopup';
-import PopupWithConfirm from './PopupWithConfirm';
-import Login from './Login';
+import { useState, useEffect } from "react";
+import { Route, Switch, useHistory } from "react-router-dom";
+import api from "../utils/Api";
+import CurrentUserContext from "../contexts/CurrentUserContext";
+import Header from "./Header";
+import Main from "./Main";
+import Footer from "./Footer";
+import ImagePopup from "./ImagePopup";
+import EditProfilePopup from "./EditProfilePopup";
+import AddPlacePopup from "./AddPlacePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
+import PopupWithConfirm from "./PopupWithConfirm";
+import Login from "./Login";
+import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
 
 export default function App() {
   // cтейты модалок
@@ -17,14 +20,17 @@ export default function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
+  const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
   // юзер, карты
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   // стейт карточки для удаления
-  const [idCardToDelete, setIdCardToDelete] = useState('');
+  const [idCardToDelete, setIdCardToDelete] = useState("");
   // стейт текста кнопки сабмита
   const [isLoading, setIsLoading] = useState(false);
+  // стейты регистрации
+  const [registration, setRegistration] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getCards()])
@@ -63,14 +69,18 @@ export default function App() {
       api
         .like(card._id, !isLiked)
         .then((newCard) => {
-          setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+          setCards((state) =>
+            state.map((c) => (c._id === card._id ? newCard : c))
+          );
         })
         .catch((err) => console.log(err));
     } else {
       api
         .dislike(card._id, !isLiked)
         .then((newCard) => {
-          setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+          setCards((state) =>
+            state.map((c) => (c._id === card._id ? newCard : c))
+          );
         })
         .catch((err) => console.log(err));
     }
@@ -82,7 +92,9 @@ export default function App() {
     api
       .deleteCard(idCardToDelete)
       .then(() => {
-        setCards((state) => state.filter((item) => item._id !== idCardToDelete));
+        setCards((state) =>
+          state.filter((item) => item._id !== idCardToDelete)
+        );
         closeAllPopups();
       })
       .catch((err) => console.log(err))
@@ -150,7 +162,14 @@ export default function App() {
           onCardClick={handleCardClick}
           onConfirm={setIdCardToDelete}
         /> */}
-        <Login/>
+        {/* <Login/> */}
+        <Register />
+        <InfoTooltip
+          // isOpen={registration}
+          isOpen={true}
+          onClose={closeAllPopups}
+          error={error}
+        />
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -187,7 +206,6 @@ export default function App() {
           onCardDelete={handleCardDelete}
           isLoading={isLoading}
         />
-
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
     </CurrentUserContext.Provider>
