@@ -160,8 +160,8 @@ export default function App() {
       .then((data) => {
         if (data.token) {
           setLoggedIn(true);
-          history.push("/");
           tokenCheck();
+          history.push("/");
         }
       })
       .catch((err) => {
@@ -194,7 +194,7 @@ export default function App() {
           exact
           path="/"
           loggedIn={loggedIn}
-          component={
+          Component={
             <CurrentUserContext.Provider value={currentUser}>
               <Main
                 cards={cards}
