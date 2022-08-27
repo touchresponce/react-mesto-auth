@@ -13,26 +13,28 @@ import PopupWithConfirm from "./PopupWithConfirm";
 import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
+import ProtectedRoute from "./ProtectedRoute";
+import * as auth from "../utils/auth";
 
 export default function App() {
-  // cтейты модалок
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({ name: "", link: "" });
-  // юзер, карты
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  // стейт карточки для удаления
   const [idCardToDelete, setIdCardToDelete] = useState("");
-  // стейт текста кнопки сабмита
   const [isLoading, setIsLoading] = useState(false);
-  // стейты регистрации
   const [registration, setRegistration] = useState(false);
   const [error, setError] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const history = useHistory();
 
   useEffect(() => {
+    tokenCheck();
     Promise.all([api.getUserInfo(), api.getCards()])
       .then(([apiUser, apiCards]) => {
         setCurrentUser(apiUser);
@@ -148,66 +150,116 @@ export default function App() {
       });
   }
 
+  //
+  function handleLogin(username, password) {
+    auth
+      .authorize({
+        identifier: username,
+        password: password,
+      })
+      .then((data) => {
+        if (data.token) {
+          setLoggedIn(true);
+          history.push("/");
+          tokenCheck();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // проверка токена
+  function tokenCheck() {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth
+        .getToken(jwt)
+        .then((res) => {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          history.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <Header />
-        {/* <Main
-          cards={cards}
-          onCardLike={handleCardLike}
-          onConfirmOpen={setIsConfirmPopupOpen}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onConfirm={setIdCardToDelete}
-        /> */}
-        {/* <Login/> */}
-        <Register />
-        <InfoTooltip
-          // isOpen={registration}
-          isOpen={true}
-          onClose={closeAllPopups}
-          error={error}
+    <div className="page">
+      <Header loggedIn={loggedIn} email={email} />
+      <Switch>
+        <ProtectedRoute
+          exact
+          path="/"
+          loggedIn={loggedIn}
+          component={
+            <CurrentUserContext.Provider value={currentUser}>
+              <Main
+                cards={cards}
+                onCardLike={handleCardLike}
+                onConfirmOpen={setIsConfirmPopupOpen}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                onConfirm={setIdCardToDelete}
+              />
+            </CurrentUserContext.Provider>
+          }
         />
-        <Footer />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          children={EditProfilePopup}
-          onUpdateUser={handleUpdateUser}
-          buttonName="Сохранить"
-          title="Редактировать профиль"
-          isLoading={isLoading}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          children={AddPlacePopup}
-          onAddPlace={handleAddPlaceSubmit}
-          buttonName="Создать"
-          title="Новое место"
-          isLoading={isLoading}
-        />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          children={EditAvatarPopup}
-          onUpdateAvatar={handleUpdateAvatar}
-          buttonName="Сохранить"
-          title="Обновить аватар"
-          isLoading={isLoading}
-        />
-        <PopupWithConfirm
-          isOpen={isConfirmPopupOpen}
-          onClose={closeAllPopups}
-          buttonName="Да"
-          title="Вы уверены?"
-          onCardDelete={handleCardDelete}
-          isLoading={isLoading}
-        />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-      </div>
-    </CurrentUserContext.Provider>
+        <Route path="/sign-in">
+          <Login handleLogin={handleLogin} />
+        </Route>
+        <Route path="/sign-up">
+          <Register />
+        </Route>
+      </Switch>
+
+      <Footer />
+      <InfoTooltip
+        isOpen={registration}
+        // isOpen={true}
+        onClose={closeAllPopups}
+        error={error}
+      />
+      <EditProfilePopup
+        isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
+        children={EditProfilePopup}
+        onUpdateUser={handleUpdateUser}
+        buttonName="Сохранить"
+        title="Редактировать профиль"
+        isLoading={isLoading}
+      />
+      <AddPlacePopup
+        isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
+        children={AddPlacePopup}
+        onAddPlace={handleAddPlaceSubmit}
+        buttonName="Создать"
+        title="Новое место"
+        isLoading={isLoading}
+      />
+      <EditAvatarPopup
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
+        children={EditAvatarPopup}
+        onUpdateAvatar={handleUpdateAvatar}
+        buttonName="Сохранить"
+        title="Обновить аватар"
+        isLoading={isLoading}
+      />
+      <PopupWithConfirm
+        isOpen={isConfirmPopupOpen}
+        onClose={closeAllPopups}
+        buttonName="Да"
+        title="Вы уверены?"
+        onCardDelete={handleCardDelete}
+        isLoading={isLoading}
+      />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+    </div>
   );
 }
