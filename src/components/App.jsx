@@ -186,9 +186,15 @@ export default function App() {
     }
   }
 
+  // выход с акка
+  function handleSignOut() {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+  }
+
   return (
     <div className="page">
-      <Header loggedIn={loggedIn} email={email} />
+      <Header loggedIn={loggedIn} email={email} onSignOut={handleSignOut} />
       <Switch>
         <ProtectedRoute
           exact
@@ -206,6 +212,7 @@ export default function App() {
                 onCardClick={handleCardClick}
                 onConfirm={setIdCardToDelete}
               />
+              <Footer />
             </CurrentUserContext.Provider>
           }
         />
@@ -217,10 +224,8 @@ export default function App() {
         </Route>
       </Switch>
 
-      <Footer />
       <InfoTooltip
         isOpen={registration}
-        // isOpen={true}
         onClose={closeAllPopups}
         error={error}
       />
