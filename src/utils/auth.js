@@ -1,13 +1,6 @@
 export const baseUrl = "https://auth.nomoreparties.co";
 
-function checked(res) {
-  if (res.ok) {
-    return Promise.resolve(res.json());
-  }
-  return Promise.reject(res.status);
-}
-
-export const register = ({ password, email }) => {
+export const register = ({ email, password }) => {
   return fetch(`${baseUrl}/signup`, {
     method: "POST",
     headers: {
@@ -38,7 +31,7 @@ export const authorize = ({ identifier, password }) => {
     })
     .then((data) => {
       if (data) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("jwt", data.token);
       }
       return data;
     });
@@ -58,4 +51,11 @@ export const getToken = (token) => {
     .then(({ data }) => {
       return data;
     });
+};
+
+const checked = (res) => {
+  if (res.ok) {
+    return Promise.resolve(res.json());
+  }
+  return Promise.reject(res.status);
 };

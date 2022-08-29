@@ -1,10 +1,19 @@
+import { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 
-function Register() {
+function Register({ handleRegistration }) {
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    handleRegistration(login, password);
+  }
+
   return (
     <div className="login">
       <h2 className="login__title">Регистрация</h2>
-      <form className="login__form" name="login-form">
+      <form className="login__form" name="login-form" onSubmit={handleSubmit}>
         <input
           className="login__input"
           type="email"
@@ -15,8 +24,8 @@ function Register() {
           maxLength="40"
           required
           autoComplete="off"
-          //   onChange={handleNameInput}
-          //   value={values.name || ''}
+          value={login}
+          onChange={(evt) => setLogin(evt.target.value)}
         />
         <input
           className="login__input"
@@ -28,8 +37,8 @@ function Register() {
           maxLength="20"
           required
           autoComplete="off"
-          //   onChange={handleInfoInput}
-          //   value={values.info || ''}
+          value={password}
+          onChange={(evt) => setPassword(evt.target.value)}
         />
         <button className="login__button" type="submit">
           Зарегистрироваться

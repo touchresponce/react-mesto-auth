@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import api from "../utils/Api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import Header from "./Header";
@@ -150,7 +150,7 @@ export default function App() {
       });
   }
 
-  //
+  // вход
   function handleLogin(username, password) {
     auth
       .authorize({
@@ -169,6 +169,19 @@ export default function App() {
       });
   }
 
+  // регистрация
+  function handleRegistration(email, password) {
+    auth
+      .register(email, password)
+      .then((res) => {
+        // setRegistration(true);
+        setEmail(res.data.email);
+        setError(false);
+      })
+      .catch(() => setError(true))
+      .finally(() => setRegistration(false));
+  }
+
   // проверка токена
   function tokenCheck() {
     const jwt = localStorage.getItem("jwt");
@@ -177,7 +190,8 @@ export default function App() {
         .getToken(jwt)
         .then((res) => {
           setLoggedIn(true);
-          setEmail(res.data.email);
+          setEmail(res.email);
+          console.log(res);
           history.push("/");
         })
         .catch((err) => {
@@ -220,8 +234,11 @@ export default function App() {
           <Login handleLogin={handleLogin} />
         </Route>
         <Route path="/sign-up">
-          <Register />
+          <Register handleRegistration={handleRegistration} />
         </Route>
+        {/* <Route path="*">
+          {loggedIn ? (Redirect = "/") : (Redirect = "/sign-in")}
+        </Route> */}
       </Switch>
 
       <InfoTooltip
