@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import api from "../utils/Api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import Header from "./Header";
@@ -170,13 +170,13 @@ export default function App() {
   }
 
   // регистрация
-  function handleRegistration(email, password) {
+  function handleRegistration({ email, password }) {
     auth
       .register(email, password)
       .then((res) => {
         // setRegistration(true);
-        setEmail(res.data.email);
-        setError(false);
+        // setError(false);
+        history.push("/");
       })
       .catch(() => setError(true))
       .finally(() => setRegistration(false));
@@ -227,6 +227,42 @@ export default function App() {
                 onConfirm={setIdCardToDelete}
               />
               <Footer />
+              <EditProfilePopup
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+                children={EditProfilePopup}
+                onUpdateUser={handleUpdateUser}
+                buttonName="Сохранить"
+                title="Редактировать профиль"
+                isLoading={isLoading}
+              />
+              <AddPlacePopup
+                isOpen={isAddPlacePopupOpen}
+                onClose={closeAllPopups}
+                children={AddPlacePopup}
+                onAddPlace={handleAddPlaceSubmit}
+                buttonName="Создать"
+                title="Новое место"
+                isLoading={isLoading}
+              />
+              <EditAvatarPopup
+                isOpen={isEditAvatarPopupOpen}
+                onClose={closeAllPopups}
+                children={EditAvatarPopup}
+                onUpdateAvatar={handleUpdateAvatar}
+                buttonName="Сохранить"
+                title="Обновить аватар"
+                isLoading={isLoading}
+              />
+              <PopupWithConfirm
+                isOpen={isConfirmPopupOpen}
+                onClose={closeAllPopups}
+                buttonName="Да"
+                title="Вы уверены?"
+                onCardDelete={handleCardDelete}
+                isLoading={isLoading}
+              />
+              <ImagePopup card={selectedCard} onClose={closeAllPopups} />
             </CurrentUserContext.Provider>
           }
         />
@@ -236,9 +272,6 @@ export default function App() {
         <Route path="/sign-up">
           <Register handleRegistration={handleRegistration} />
         </Route>
-        {/* <Route path="*">
-          {loggedIn ? (Redirect = "/") : (Redirect = "/sign-in")}
-        </Route> */}
       </Switch>
 
       <InfoTooltip
@@ -246,42 +279,6 @@ export default function App() {
         onClose={closeAllPopups}
         error={error}
       />
-      <EditProfilePopup
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        children={EditProfilePopup}
-        onUpdateUser={handleUpdateUser}
-        buttonName="Сохранить"
-        title="Редактировать профиль"
-        isLoading={isLoading}
-      />
-      <AddPlacePopup
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        children={AddPlacePopup}
-        onAddPlace={handleAddPlaceSubmit}
-        buttonName="Создать"
-        title="Новое место"
-        isLoading={isLoading}
-      />
-      <EditAvatarPopup
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        children={EditAvatarPopup}
-        onUpdateAvatar={handleUpdateAvatar}
-        buttonName="Сохранить"
-        title="Обновить аватар"
-        isLoading={isLoading}
-      />
-      <PopupWithConfirm
-        isOpen={isConfirmPopupOpen}
-        onClose={closeAllPopups}
-        buttonName="Да"
-        title="Вы уверены?"
-        onCardDelete={handleCardDelete}
-        isLoading={isLoading}
-      />
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </div>
   );
 }

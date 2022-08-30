@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 
 function Register({ handleRegistration }) {
-  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    handleRegistration(login, password);
+    handleRegistration({ email, password });
   }
 
   return (
@@ -24,8 +24,8 @@ function Register({ handleRegistration }) {
           maxLength="40"
           required
           autoComplete="off"
-          value={login}
-          onChange={(evt) => setLogin(evt.target.value)}
+          value={email}
+          onChange={(evt) => setEmail(evt.target.value)}
         />
         <input
           className="login__input"
