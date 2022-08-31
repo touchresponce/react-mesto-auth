@@ -8,3 +8,9 @@
   letter-spacing: 0em;
   text-decoration: none;
 }
+
+@media screen and (max-width: 500px) {
+  .header__link {
+    margin: 0;
+  }
+}

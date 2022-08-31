@@ -79,3 +79,29 @@
 @import url(./blocks/popup/__container-registration/popup__container-registration.css);
 @import url(./blocks/popup/__registration-image/popup__registration-image.css);
 @import url(./blocks/popup/__registration-text/popup__registration-text.css);
+
+.header__burger-open .header__burger-line {
+  background-color: transparent;
+}
+
+.header__burger-open .header__burger-line:before {
+  width: 28px;
+  transform: rotate(45deg);
+  top: 0;
+}
+
+.header__burger-open .header__burger-line::after {
+  width: 28px;
+  transform: rotate(-45deg);
+  top: 0;
+}
+
+/*  */
+
+.header__wrapper_visible {
+  top: 0;
+}
+
+.header__visible {
+  margin-top: 142px;
+}
