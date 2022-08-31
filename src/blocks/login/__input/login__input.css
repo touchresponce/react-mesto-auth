@@ -14,3 +14,9 @@
 .login__input:last-of-type {
   margin-bottom: 216px;
 }
+
+@media screen and (max-width: 380px) {
+  .login__input {
+    max-width: 90%;
+  }
+}

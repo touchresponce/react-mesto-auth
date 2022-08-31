@@ -8,12 +8,12 @@ function Header({ loggedIn, email, onSignOut }) {
   const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className={`header ${isOpen ? "header__visible" : ""}`}>
+    <header className={`header ${isOpen && loggedIn ? "header__visible" : ""}`}>
       <img className="header__logo" src={logo} alt="Лого проекта Mesto" />
       {loggedIn ? (
         <div
           className={`header__wrapper ${
-            isOpen ? "header__wrapper_visible" : ""
+            isOpen && loggedIn ? "header__wrapper_visible" : ""
           }`}
         >
           <p className="header__email">{email}</p>

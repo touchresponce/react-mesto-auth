@@ -10,6 +10,9 @@
 @import url(./blocks/header/__link/header__link.css);
 @import url(./blocks/header/__burger/header__burger.css);
 @import url(./blocks/header/__burger-line/header__burger-line.css);
+@import url(./blocks/header/__burger-open/header__burger-open.css);
+@import url(./blocks/header//__wrapper/_visible/header__wrapper_visible.css);
+@import url(./blocks/header/__visible/header__visible.css);
 /* profile */
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__wrapper/profile__wrapper.css);
@@ -79,29 +82,3 @@
 @import url(./blocks/popup/__container-registration/popup__container-registration.css);
 @import url(./blocks/popup/__registration-image/popup__registration-image.css);
 @import url(./blocks/popup/__registration-text/popup__registration-text.css);
-
-.header__burger-open .header__burger-line {
-  background-color: transparent;
-}
-
-.header__burger-open .header__burger-line:before {
-  width: 28px;
-  transform: rotate(45deg);
-  top: 0;
-}
-
-.header__burger-open .header__burger-line::after {
-  width: 28px;
-  transform: rotate(-45deg);
-  top: 0;
-}
-
-/*  */
-
-.header__wrapper_visible {
-  top: 0;
-}
-
-.header__visible {
-  margin-top: 142px;
-}

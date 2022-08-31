@@ -14,3 +14,10 @@
 .login__button:hover {
   opacity: 0.85;
 }
+
+@media screen and (max-width: 380px) {
+  .login__button {
+    /* max-width: 260px; */
+    width: calc(100% - 10px * 2);
+  }
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 function Login({ handleLogin }) {
   const [username, setUsername] = useState("");
@@ -47,6 +47,12 @@ function Login({ handleLogin }) {
           Войти
         </button>
       </form>
+      <h3 className="login__text">
+        Нет аккаунта?&nbsp;
+        <Link className="login__link" to="sign-up">
+          Зарегистрироваться
+        </Link>
+      </h3>
     </div>
   );
 }
