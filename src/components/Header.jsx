@@ -27,6 +27,9 @@ function Header({ loggedIn, email, onSignOut }) {
           )}
         </div>
       )}
+      <button className="header__burger" type="button">
+        <span className="header__burger-line"></span>
+      </button>
     </header>
   );
 }

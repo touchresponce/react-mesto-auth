@@ -173,7 +173,7 @@ export default function App() {
   function handleRegistration({ email, password }) {
     auth
       .register(email, password)
-      .then((res) => {
+      .then(() => {
         // setRegistration(true);
         // setError(false);
         history.push("/");
@@ -191,7 +191,6 @@ export default function App() {
         .then((res) => {
           setLoggedIn(true);
           setEmail(res.email);
-          console.log(res);
           history.push("/");
         })
         .catch((err) => {
