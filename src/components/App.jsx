@@ -62,6 +62,7 @@ export default function App() {
     setIsEditAvatarPopupOpen(false);
     setIsConfirmPopupOpen(false);
     setSelectedCard({});
+    setRegistration(false);
   }
 
   // лайки логика
@@ -174,12 +175,18 @@ export default function App() {
     auth
       .register(email, password)
       .then(() => {
-        // setRegistration(true);
-        // setError(false);
-        history.push("/");
+        setRegistration(true);
+        setError(false);
       })
-      .catch(() => setError(true))
-      .finally(() => setRegistration(false));
+      .catch(() => {
+        setRegistration(true);
+        setError(true);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setRegistration(false);
+        }, 3000);
+      });
   }
 
   // проверка токена
@@ -275,6 +282,7 @@ export default function App() {
 
       <InfoTooltip
         isOpen={registration}
+        // isOpen={true}
         onClose={closeAllPopups}
         error={error}
       />
