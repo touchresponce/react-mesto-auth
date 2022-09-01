@@ -36,7 +36,7 @@
 
 Клонировать репозиторий:
 
-    git clone https://github.com/ia-stepanov/react-mesto-auth.git
+    git clone https://github.com/touchresponce/react-mesto-auth.git
 
 Установить зависимости:
 
