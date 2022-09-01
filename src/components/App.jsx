@@ -35,13 +35,14 @@ export default function App() {
 
   useEffect(() => {
     tokenCheck();
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([apiUser, apiCards]) => {
-        setCurrentUser(apiUser);
-        setCards(apiCards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    loggedIn &&
+      Promise.all([api.getUserInfo(), api.getCards()])
+        .then(([apiUser, apiCards]) => {
+          setCurrentUser(apiUser);
+          setCards(apiCards);
+        })
+        .catch((err) => console.log(err));
+  }, [loggedIn]);
 
   // управление модалками
   function handleEditProfileClick() {
@@ -167,6 +168,11 @@ export default function App() {
       })
       .catch((err) => {
         console.log(err);
+        setError(true);
+        setRegistration(true);
+        setTimeout(() => {
+          setRegistration(false);
+        }, 3000);
       });
   }
 
@@ -175,14 +181,13 @@ export default function App() {
     auth
       .register(email, password)
       .then(() => {
-        setRegistration(true);
         setError(false);
       })
       .catch(() => {
-        setRegistration(true);
         setError(true);
       })
       .finally(() => {
+        setRegistration(true);
         setTimeout(() => {
           setRegistration(false);
         }, 3000);
